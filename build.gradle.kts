@@ -35,6 +35,8 @@ javafx {
 }
 
 dependencies {
+    implementation("org.slf4j:slf4j-api:2.0.9")
+    implementation("org.slf4j:slf4j-simple:2.0.9")
     implementation("org.jline:jline-terminal:3.26.0")
     implementation("org.jline:jline-reader:3.26.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-javafx:1.8.1")

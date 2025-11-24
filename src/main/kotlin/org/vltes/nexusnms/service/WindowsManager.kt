@@ -1,6 +1,8 @@
 package org.vltes.nexusnms.service
 
 import javafx.application.Platform
+import javafx.beans.property.BooleanProperty
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.fxml.FXMLLoader
 import javafx.geometry.Insets
 import javafx.scene.Parent
@@ -15,9 +17,8 @@ import javafx.stage.Modality
 import javafx.stage.Stage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import org.vltes.nexusnms.view.NewDeviceDialogView
+import org.vltes.nexusnms.view.MainWindowView
 import kotlin.system.exitProcess
 
 @Suppress("JAVA_CLASS_ON_COMPANION")
@@ -37,15 +38,23 @@ class WindowsManager {
 
             val cancelButton = Button("Отмена")
             val confirmButton = Button("Подтвердить")
+            val allDevicesAdded = SimpleBooleanProperty(false)
+
+            confirmButton.disableProperty().bind(allDevicesAdded.not())
+
 
             val listDevice = ipList.map{ip -> Label("$ip ожидание...").also{label -> vBox.children.add(label)}}
+
+            val deviceList = mutableListOf<Device>()
 
             val job = CoroutineScope(Dispatchers.Main).launch {
                 ipList.forEachIndexed { i, ip ->
                     listDevice[i].text = "$ip подключение..."
                     val result = Commands.addDevice(ip)
                     listDevice[i].text = "$ip $result"
+                    deviceList.add(Device(ip, "name", "model"))
                 }
+                allDevicesAdded.set(true)
             }
 
             hBox.children.addAll(cancelButton, confirmButton)
@@ -62,7 +71,7 @@ class WindowsManager {
                 stage.close()
             }
             confirmButton.setOnAction{
-
+                MainWindowView.confirmDevice(deviceList)
             }
 
             stage.show()

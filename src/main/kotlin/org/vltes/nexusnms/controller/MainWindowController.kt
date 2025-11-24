@@ -6,6 +6,7 @@ import javafx.scene.control.TableView
 import javafx.scene.control.cell.PropertyValueFactory
 import org.vltes.nexusnms.service.Device
 import org.vltes.nexusnms.service.WindowsManager
+import org.vltes.nexusnms.view.MainWindowView
 
 class MainWindowController {
 
@@ -20,10 +21,10 @@ class MainWindowController {
     }
 
     private fun setupTable(){
-        ip.cellValueFactory = PropertyValueFactory("ip")
-        name.cellValueFactory = PropertyValueFactory("name")
-        model.cellValueFactory = PropertyValueFactory("model")
-        //tableListDevice.items =
+        ip.setCellValueFactory{it.value.ip}
+        name.setCellValueFactory{it.value.name}
+        model.setCellValueFactory{it.value.model}
+        tableListDevice.items = MainWindowView.deviceList
     }
 
     @FXML
