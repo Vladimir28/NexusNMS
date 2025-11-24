@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0"
+      prefWidth="1800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.vltes.nexusnms.controller.MainWindowController">
+   <children>
+       <HBox prefHeight="900.0">
+       <Region HBox.hgrow="ALWAYS" />
+
+      <TableView fx:id="tableListDevice" minHeight="600" prefHeight="200.0" prefWidth="300.0" HBox.hgrow="NEVER">
+        <columns>
+          <TableColumn prefWidth="100.0" text="Ip-адрес" fx:id="ip"/>
+          <TableColumn prefWidth="100.0" text="Название" fx:id="name"/>
+          <TableColumn prefWidth="100.0" text="Модель" fx:id="model"/>
+        </columns>
+      </TableView>
+       <Region HBox.hgrow="NEVER" />
+       </HBox>
+       <HBox>
+           <Region HBox.hgrow="ALWAYS" />
+           <Button fx:id="addNewDevice" onAction="#addNewDeviceClick" prefHeight="40.0" prefWidth="100.0" text="Устройство" />
+           <Button fx:id="addNewCatalog" onAction="#addNewCatalogClick" prefHeight="40.0" prefWidth="100.0" text="Каталог" />
+       </HBox>
+   </children>
+</VBox>
