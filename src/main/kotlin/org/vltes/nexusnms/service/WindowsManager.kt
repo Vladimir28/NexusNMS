@@ -30,18 +30,13 @@ class WindowsManager {
             val vBox = VBox(10.0).apply {
                 padding = Insets(10.0)
             }
-
             val hBox = HBox(10.0)
-            val scroll = ScrollPane(vBox).apply {
-
-            }
+            val scroll = ScrollPane(vBox)
 
             val cancelButton = Button("Отмена")
-            val confirmButton = Button("Подтвердить")
-            val allDevicesAdded = SimpleBooleanProperty(false)
-
-            confirmButton.disableProperty().bind(allDevicesAdded.not())
-
+            val confirmButton = Button("Подтвердить").apply {
+                isDisable = true
+            }
 
             val listDevice = ipList.map{ip -> Label("$ip ожидание...").also{label -> vBox.children.add(label)}}
 
@@ -49,12 +44,21 @@ class WindowsManager {
 
             val job = CoroutineScope(Dispatchers.Main).launch {
                 ipList.forEachIndexed { i, ip ->
+                    val ssh = ConnectSSH()
                     listDevice[i].text = "$ip подключение..."
-                    val result = Commands.addDevice(ip)
-                    listDevice[i].text = "$ip $result"
-                    deviceList.add(Device(ip, "name", "model"))
+                    val status = ssh.connect(ip)
+                    if(status.isSuccess) {
+                        listDevice[i].text = "$ip добавление устройства..."
+                        val shRun = ssh.send("sh run").getOrNull() ?: "null"
+                        val shVer = ssh.send("sh ver").getOrNull() ?: "null"
+                            //надо обработать на ошибки
+                        deviceList.add(Device(ip, DeviceRegex.hostName(shRun), DeviceRegex.model(shVer)))
+                        listDevice[i].text = "$ip успешно!"
+                    }else{
+                        listDevice[i].text = "$ip $status"
+                    }
                 }
-                allDevicesAdded.set(true)
+                confirmButton.isDisable = false
             }
 
             hBox.children.addAll(cancelButton, confirmButton)
@@ -72,6 +76,7 @@ class WindowsManager {
             }
             confirmButton.setOnAction{
                 MainWindowView.confirmDevice(deviceList)
+                stage.close()
             }
 
             stage.show()

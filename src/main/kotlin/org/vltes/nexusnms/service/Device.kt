@@ -6,6 +6,4 @@ class Device(ip: String, name: String, model: String) {
      val ip = SimpleStringProperty(ip)
      val name = SimpleStringProperty(name)
      val model = SimpleStringProperty(model)
-
-
 }

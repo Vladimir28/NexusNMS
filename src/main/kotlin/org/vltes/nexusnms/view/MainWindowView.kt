@@ -9,6 +9,6 @@ object MainWindowView {
     val deviceList: ObservableList<Device> = FXCollections.observableArrayList()
 
     fun confirmDevice(deviceList: List<Device>) {
-        this.deviceList.setAll(deviceList)
+        this.deviceList.addAll(deviceList)
     }
 }

@@ -32,10 +32,8 @@ class ConnectSSH {
             shell = session.startShell()
             input = shell.inputStream
             output = shell.outputStream
-            println(Result.success("Успешно"))
             Result.success("Успешно")
         }catch(e: Exception) {
-            println("Не прошло!")
             e.printStackTrace()
             Result.failure(e)
         }
@@ -116,20 +114,4 @@ class ConnectSSH {
             println("SSH Закрыто успешно!")
         } catch (_: Exception){}
     }
-
-
-
-    /* suspend fun send(cmd: String): Result<String> = withContext(Dispatchers.IO){
-         try{
-             output.write((cmd + "\n").toByteArray())
-             output.flush()
-             println(Result.success("Успешноx2"))
-             Result.success(withTimeout(20000){
-                 IOUtils.readFully(input).toString(Charsets.UTF_8)
-             })
-         } catch (e: Exception){
-             println("Не прошло!x2")
-             Result.failure(e)
-         }
-     }*/
 }

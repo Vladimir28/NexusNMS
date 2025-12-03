@@ -13,6 +13,7 @@ class Commands {
                 println("Ошибка подключения: ${connectResult.exceptionOrNull()?.message}")
                 return@withContext connectResult.exceptionOrNull()?.message ?: "Какая-то нераспознанная ошибка"
             }
+
             // println(ssh.send("help").getOrNull())
             /*            println(ssh.send("en").getOrNull())
                         ssh.send("conf t")
@@ -24,4 +25,8 @@ class Commands {
             return@withContext "Оборудование добавлено"
         }
     }
+
+
+
+
 }
