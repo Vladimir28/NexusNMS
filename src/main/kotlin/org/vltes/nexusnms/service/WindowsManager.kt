@@ -45,17 +45,22 @@ class WindowsManager {
             val job = CoroutineScope(Dispatchers.Main).launch {
                 ipList.forEachIndexed { i, ip ->
                     val ssh = ConnectSSH()
-                    listDevice[i].text = "$ip подключение..."
+                    listDevice[i].text = "$ip: Подключение..."
                     val status = ssh.connect(ip)
                     if(status.isSuccess) {
-                        listDevice[i].text = "$ip добавление устройства..."
-                        val shRun = ssh.send("sh run").getOrNull() ?: "null"
-                        val shVer = ssh.send("sh ver").getOrNull() ?: "null"
-                            //надо обработать на ошибки
-                        deviceList.add(Device(ip, DeviceRegex.hostName(shRun), DeviceRegex.model(shVer)))
-                        listDevice[i].text = "$ip успешно!"
+                        listDevice[i].text = "$ip: Добавление устройства..."
+                        val shRun = ssh.send("sh run").getOrNull()
+                        val shVer = ssh.send("sh ver").getOrNull()
+                        val hostName = shRun?.let{DeviceRegex.hostName(it)} ?: "-"
+                        val model = shVer?.let{DeviceRegex.model(it)} ?: "-"
+                        deviceList.add(Device(ip, hostName, model))
+                        listDevice[i].text = "$ip: Успешно!"
+                        listDevice[i].style = "-fx-text-fill: green;"
+                        ssh.disconnect()
                     }else{
-                        listDevice[i].text = "$ip $status"
+                        listDevice[i].text = "$ip: ${ServiceCommand.errorHandler(status)}"
+                        listDevice[i].style = "-fx-text-fill: red;"
+                        ssh.disconnect()
                     }
                 }
                 confirmButton.isDisable = false
